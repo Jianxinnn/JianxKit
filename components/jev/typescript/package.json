@@ -1,0 +1,35 @@
+{
+  "name": "@mykit/jev",
+  "version": "0.1.0",
+  "private": true,
+  "description": "通用 AI 处理模块：分类、提取、判断。Jev 优先，普通语言模型补充。",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "example": "tsx examples/classify-tool.ts",
+    "test": "npm run typecheck && npm run build && node --test 'test/*.test.js'"
+  },
+  "dependencies": {
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "tsx": "^4.20.6",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

@@ -1,0 +1,13 @@
+id = "llm-call"
+version = "0.1.0"
+status = "experimental"
+category = "ai"
+summary = "一次 OpenAI 兼容的 chat completions 调用，可带工具，带重试，只用标准库"
+languages = ["python"]
+
+[[source]]
+project = "BioMolHarness"
+repo = "https://github.com/Jianxinnn/BioMolHarness"
+paths = ["baseline/agent/llm.py", "baseline/agent/models.py"]
+commit = "df43d921"
+copied = 2026-11-01

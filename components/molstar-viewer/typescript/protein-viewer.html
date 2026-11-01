@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Without this the browser gives the frame an opaque white canvas of its own, so a transparent viewer sits in a
+     white box on a dark page. Declaring both schemes lets the transparent root composite onto the host page. -->
+<meta name="color-scheme" content="light dark">
+<!-- WebKit cannot resolve CSP 'self' in an opaque-origin sandbox, including HTTP.
+     Install the policy before loading assets, using only this document's actual
+     serving origin. The parent cannot supply it; outbound connections stay off. -->
+<script>
+(() => {
+  const origin = /^https?:$/.test(location.protocol) ? location.origin : location.protocol === 'tauri:' ? 'tauri://localhost' : "'self'";
+  const policy = document.createElement('meta');
+  policy.httpEquiv = 'Content-Security-Policy';
+  policy.content = `default-src 'none'; script-src ${origin} 'unsafe-inline' 'unsafe-eval'; style-src ${origin} 'unsafe-inline'; img-src data: blob:; connect-src 'none'; worker-src blob:; font-src data:`;
+  document.head.append(policy);
+})();
+</script>
+<title>Mol* protein structure viewer</title>
+<link rel="stylesheet" href="./vendor/molstar/molstar.css">
+<style>html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}#stage{position:relative}.msp-plugin,.msp-layout-standard{border:0!important}.viewer-clear .msp-plugin,.viewer-clear .msp-plugin *,.viewer-clear canvas{background:transparent!important}.msp-viewport-controls,.msp-highlight-toast-wrapper{display:none!important}</style>
+<!-- The viewer is offline by design (connect-src 'none'). Mol* still probes two things at start-up, and each probe
+     only logs a console error here: its video encoder fetches its own inlined WebAssembly from a data: URL before
+     decoding it in place, and its VR/AR support asks navigator.xr, which this frame is not allowed to use. Answer
+     both as unavailable instead of loosening the policy; Mol* falls back exactly as it does after the blocked call. -->
+<script>
+(() => {
+  const fetch = window.fetch;
+  window.fetch = (input, init) => String(input instanceof Request ? input.url : input).startsWith("data:")
+    ? Promise.reject(new TypeError("This viewer does not fetch")) : fetch(input, init);
+  Object.defineProperty(navigator, "xr", { value: undefined, configurable: true });
+})();
+</script>
+<script src="./vendor/molstar/molstar.js"></script>
+</head>
+<body><div id="stage" role="img" aria-label="Interactive Mol* protein structure"></div>
+<script src="./protein-viewer.js"></script></body></html>

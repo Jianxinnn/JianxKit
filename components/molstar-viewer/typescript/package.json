@@ -1,0 +1,36 @@
+{
+  "name": "@mykit/molstar-viewer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Framework-independent, sandboxed Mol* reader and typed host bridge.",
+  "scripts": {
+    "test": "node --test test/workspace.test.js test/export.test.js",
+    "test:browser": "node --test test/browser.test.js",
+    "demo": "node demo.mjs",
+    "demo:build": "node demo.mjs --build-only"
+  },
+  "exports": {
+    ".": {
+      "types": "./client.d.ts",
+      "default": "./protein-viewer-client.js"
+    },
+    "./export-assets": "./export-assets.mjs"
+  },
+  "files": [
+    "protein-viewer-client.js",
+    "protein-workspace.js",
+    "client.d.ts",
+    "protein-viewer.html",
+    "protein-viewer.js",
+    "export-assets.mjs",
+    "protein-viewer-example.html"
+  ],
+  "peerDependencies": {
+    "molstar": "5.11.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "molstar": "5.11.0"
+  }
+}

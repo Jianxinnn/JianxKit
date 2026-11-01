@@ -1,0 +1,19 @@
+id = "molstar-viewer"
+version = "0.1.0"
+status = "stable"
+category = "ui"
+summary = "隔离 iframe 里的 Mol* 结构阅读器，带类型化的宿主通信接口和 Agent 场景协议"
+languages = ["typescript"]
+
+[[source]]
+project = "Evo-Platform"
+repo = "https://github.com/Jianxinnn/Evo-Platform"
+paths = ["packages/protein-viewer", "frontend/tests/protein-viewer/standalone.test.cjs"]
+commit = "377f50b5"
+copied = 2026-11-01
+note = "复刻的是工作区版本：protein-viewer 在 5bdb1c26 之后有未提交修改"
+
+# 文档站的在线示例：npm run demo:build 导出到 typescript/demo-build/，再嵌入这个页面
+[demo]
+entry = "protein-viewer-example.html?structure=1UBQ.pdb"
+height = 640

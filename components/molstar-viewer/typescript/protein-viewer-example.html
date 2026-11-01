@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>独立蛋白阅读器 · 集成示例</title>
+<style>
+:root{font:14px system-ui;color-scheme:light dark}body{margin:0;padding:20px;background:light-dark(#f7f7f8,#151515)}header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}h1{font-size:16px;margin:0}button,input{font:inherit}iframe{display:block;border:0;width:100%;height:calc(100vh - 180px);min-height:300px;border-radius:12px}#status{font-size:13px;opacity:.7}label{display:flex;gap:6px;align-items:center}
+</style>
+<header><h1>独立蛋白阅读器</h1><input aria-label="打开本地 PDB 或 CIF" type="file" accept=".pdb,.cif"><button data-mode="cartoon">卡通</button><button data-mode="stick">棍状</button><button data-mode="surface">表面</button><button id="clear">取消选择</button><label>残基 <input id="residue" size="5" placeholder="A:25"></label><button id="locate">定位</button><button id="theme">切换主题</button></header>
+<iframe title="独立 Mol* 阅读器" sandbox="allow-scripts" src="./protein-viewer.html"></iframe>
+<p id="status">打开本地结构文件。无需 Chat、账号、后端或模型。</p>
+<section aria-label="Agent 协作"><button id="pin" aria-pressed="false">固定视图</button> <button id="agent">Agent → A:48</button> <button id="agent63">Agent → A:63</button><div id="pending"></div><p id="receipt" role="status">每次操作等待 Mol* 的对应回执</p></section>
+<script type="module">
+import {sendViewerCommand,subscribeViewer,createProteinWorkspace} from './protein-viewer-client.js';
+const frame=document.querySelector('iframe'),status=document.querySelector('#status');
+let ready=false,dark=false,target={chain:'',residue:null},loaded=false,content='',format='pdb';
+const theme=()=>({dark,background:dark?0x151515:0xf7f7f8});
+const send=command=>sendViewerCommand(frame,command);
+const workspace=createProteinWorkspace({send});
+workspace.subscribe(()=>{
+ const state=workspace.getSnapshot();
+ document.querySelector('#pin').setAttribute('aria-pressed',String(state.pinned));
+ document.querySelector('#pin').textContent=state.pinned?'视图已固定':'固定视图';
+ document.querySelector('#pending').replaceChildren(...state.pending.map(command=>{
+  const row=document.createElement('div'),apply=document.createElement('button'),dismiss=document.createElement('button');
+  row.append(`待应用 ${command.chain}:${command.residue} `);
+  apply.textContent='应用';apply.disabled=!!state.active;apply.onclick=()=>workspace.applyPending(command.id);
+  dismiss.textContent='忽略';dismiss.onclick=()=>workspace.dismiss(command.id);row.append(apply,dismiss);return row;
+ }));
+ document.querySelector('#receipt').textContent=state.active?`等待回执 · ${state.active.id}`:state.receipt?`${state.receipt.status} · ${state.receipt.id}`:'等待操作';
+});
+document.querySelector('#pin').onclick=()=>workspace.setPinned(!workspace.getSnapshot().pinned);
+for(const [selector,residue] of [['#agent','48'],['#agent63','63']])document.querySelector(selector).onclick=()=>{
+ if(ready)void workspace.request({type:'view',id:crypto.randomUUID(),assetId:'local',assetVersion:'1',chain:'A',residue,mode:'stick',palette:'uniform',focus:true});
+};
+window.addEventListener('pagehide',()=>workspace.dispose());
+const load=()=>{if(loaded&&content)send({type:'load',content,format,...theme()});};
+frame.addEventListener('load',()=>{loaded=true;load();});
+subscribeViewer(frame,event=>{
+ if(event.type==='receipt')workspace.receive(event);
+ if(event.type==='ready'){ready=true;status.textContent=`${event.atoms} 个原子 · 未选择时，表示应用于整个结构`;}
+ if(event.type==='error')status.textContent=event.message;
+ if(event.type==='pick')target={chain:event.chain,residue:event.residue};
+ if(event.type==='clear-selection')document.querySelector('#clear').click();
+ if(event.type==='selected'){target={chain:event.chain,residue:event.residue};status.textContent=event.residue?`选中 ${event.chain}:${event.residue} · ${event.mode} · ${event.atoms} 个原子`:'未选择 · 后续表示应用于整个结构';}
+});
+document.querySelector('[type=file]').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;ready=false;format=file.name.toLowerCase().endsWith('.cif')?'cif':'pdb';content=await file.text();load();});
+// ?structure=1UBQ.pdb 自动打开同目录下的结构文件（文档站的在线示例用）；只接受同目录的相对文件名
+const preset=new URLSearchParams(location.search).get('structure');
+if(preset&&/^[\w.-]+\.(pdb|cif)$/i.test(preset))fetch(preset).then(response=>{if(!response.ok)throw new Error(response.status);return response.text();}).then(text=>{format=preset.toLowerCase().endsWith('.cif')?'cif':'pdb';content=text;load();}).catch(error=>{status.textContent=`无法打开 ${preset}：${error.message}`;});
+for(const button of document.querySelectorAll('[data-mode]'))button.onclick=()=>{if(ready)send({type:'style',mode:button.dataset.mode,palette:'uniform',...target});};
+document.querySelector('#clear').onclick=()=>{target={chain:'',residue:null};send({type:'select',...target});};
+document.querySelector('#locate').onclick=()=>{const match=/^([^:]{1,8}):(-?\d+[A-Za-z]?)$/.exec(document.querySelector('#residue').value);if(match)send({type:'select',chain:match[1],residue:match[2],focus:true});};
+document.querySelector('#theme').onclick=()=>{dark=!dark;document.documentElement.style.colorScheme=dark?'dark':'light';send({type:'theme',...theme()});};
+</script>
+</html>

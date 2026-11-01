@@ -1,0 +1,14 @@
+id = "jev"
+version = "0.1.0"
+status = "experimental"
+category = "ai"
+summary = "分类、提取、判断三个接口：Jev 优先，OpenAI 兼容模型补充提取、原文引用和降级"
+languages = ["python", "typescript"]
+
+[[source]]
+project = "jev-base"
+repo = "https://github.com/EnzymeGroup/jev-base"
+paths = ["python", "typescript", "README.md"]
+commit = "c9a19fd7"
+copied = 2026-11-01
+note = "组里的仓库；MyKit 里是复刻，原仓库照常维护"

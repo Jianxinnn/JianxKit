@@ -1,0 +1,14 @@
+id = "reflection"
+version = "0.1.0"
+status = "experimental"
+category = "ai"
+summary = "基本 reflection：验证失败后由 critic 总结原因和下一步，附在任务后重试"
+languages = ["python"]
+
+[[source]]
+project = "learn-claude-code/Agent-demo"
+repo = "https://github.com/shareAI-lab/learn-claude-code"
+paths = ["Agent-demo/demo_common/reflection.py", "Agent-demo/demo_common/workflows.py"]
+commit = "5dfe67f4"
+copied = 2026-11-01
+note = "Agent-demo/ 是本地新增目录，不在该仓库的 git 跟踪里；commit 只是所在仓库的版本"

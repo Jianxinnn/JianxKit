@@ -1,0 +1,15 @@
+id = "diffusion"
+version = "0.1.0"
+status = "experimental"
+category = "model"
+summary = "AF3 / EDM 风格坐标扩散：噪声日程、EDM 预条件和损失权重、随机增强、Euler 采样器，网络可替换"
+languages = ["python"]
+
+[[source]]
+project = "Protenix"
+repo = "https://github.com/bytedance/Protenix"
+paths = ["protenix/model/generator.py", "protenix/model/utils.py", "protenix/model/modules/diffusion.py", "protenix/model/loss.py"]
+commit = "c3bfc365"
+copied = 2026-11-01
+license = "Apache-2.0"
+note = "utils.py 只取增强相关函数；diffusion.py 和 loss.py 只取预条件、损失权重公式"

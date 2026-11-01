@@ -1,0 +1,13 @@
+[project]
+name = "mykit-reflection"
+version = "0.1.0"
+description = "基本 reflection：失败 → critic 总结 → 带着总结重试，只用标准库"
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mykit"]

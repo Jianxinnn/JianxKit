@@ -1,0 +1,19 @@
+{
+  "name": "mykit",
+  "private": true,
+  "description": "开发用工作区：把所有 TypeScript 组件装在一起测试。各组件自己的包定义在 components/<id>/typescript/。",
+  "workspaces": [
+    "components/*/typescript"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "docs:prepare": "node docs/prepare.mjs",
+    "docs:dev": "npm run docs:prepare && vitepress dev docs",
+    "docs:build": "npm run docs:prepare && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "smol-toml": "^1.9.1",
+    "vitepress": "^1.6.4"
+  }
+}

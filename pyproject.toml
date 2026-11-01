@@ -1,0 +1,12 @@
+# 只用于开发：把所有 Python 组件和 mykit 命令行装进同一个环境里测试。
+# 各组件自己的包定义在 components/<id>/python/，命令行在 kit/。
+[tool.uv.workspace]
+members = ["components/*/python", "kit"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["components", "kit/tests"]
+norecursedirs = ["node_modules", ".*", "dist", "templates"]
+addopts = "--import-mode=importlib"

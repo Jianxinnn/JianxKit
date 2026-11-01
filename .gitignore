@@ -1,0 +1,19 @@
+.DS_Store
+.env
+
+# python
+__pycache__/
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# typescript
+node_modules/
+dist/
+*.tgz
+
+# 组件示例导出、文档站构建
+components/*/typescript/demo-build/
+docs/public/demos/
+docs/.vitepress/cache/
+docs/.vitepress/dist/

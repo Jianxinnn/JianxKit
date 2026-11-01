@@ -1,0 +1,21 @@
+id = "$id"
+version = "0.1.0"
+status = "experimental"
+category = "$category"
+summary = $summary_toml
+languages = $languages_toml
+
+# 从别的项目复刻时，每个来源写一节：
+# [[source]]
+# project = "项目名"
+# repo = "https://github.com/..."
+# paths = ["原项目里的路径"]
+# commit = "原项目的提交"
+# copied = $date
+# license = "原项目许可证；自己的项目可以不写"
+
+# 想在文档站嵌入在线示例（TypeScript 组件）：
+# 在 typescript/package.json 加 demo:build 脚本，把静态页面导出到 typescript/demo-build/，然后写：
+# [demo]
+# entry = "index.html"
+# height = 600

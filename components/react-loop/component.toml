@@ -1,0 +1,14 @@
+id = "react-loop"
+version = "0.1.0"
+status = "experimental"
+category = "ai"
+summary = "最小 ReAct 循环：工具注册与参数校验、调用记录、JSONL 轨迹，模型可替换"
+languages = ["python"]
+
+[[source]]
+project = "BioMolHarness"
+repo = "https://github.com/Jianxinnn/BioMolHarness"
+paths = ["baseline/agent/loop.py", "baseline/agent/registry.py", "baseline/agent/models.py", "baseline/agent/trace.py", "baseline/agent/tools/base.py", "baseline/agent/llm.py"]
+commit = "df43d921"
+copied = 2026-11-01
+note = "tools/base.py 只取 AgentTool；llm.py 只取 SequenceAgentModel（改名 ScriptedModel）"
